@@ -1,74 +1,102 @@
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+class Score implements Comparable<Score> {
+    private final static String[] SCORES = {"Love", "Fifteen", "Thirty", "Forty"};
+    int score = 0;
+
+    String name() {
+        if (score < SCORES.length) {
+            return SCORES[score];
+        } else {
+            return "Advantage";
+        }
+    }
+
+    void scorePoint() {
+        score++;
+    }
+
+    boolean won(Score other) {
+        return winnable() && this.score - other.score >= 2;
+    }
+
+    public boolean winnable() {
+        return this.score > 3;
+    }
+
+    @Override
+    public int hashCode() {
+        return score;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return score == ((Score) obj).score;
+    }
+
+    @Override
+    public int compareTo(Score o) {
+        return score - o.score;
+    }
+}
+
+class Player {
+    Score score = new Score();
+    final String name;
+
+    Player(String name) {
+        this.name = name;
+    }
+
+    Player winning(Player player2) {
+        return this.score.won(player2.score) ? this : player2.score.won(this.score) ? player2 : null;
+    }
+
+    Player advantage(Player player2) {
+        if (score.winnable() || player2.score.winnable()) {
+            int diff = this.score.compareTo(player2.score);
+            return diff > 0 ? this : diff < 0 ? player2 : null;
+        }
+        return null;
+    }
+}
 
 public class TennisGame1 implements TennisGame {
-    
-    private int m_score1 = 0;
-    private int m_score2 = 0;
-    private String player1Name;
-    private String player2Name;
+
+
+    private final Player player1;
+    private final Player player2;
 
     public TennisGame1(String player1Name, String player2Name) {
-        this.player1Name = player1Name;
-        this.player2Name = player2Name;
+        this.player1 = new Player(player1Name);
+        this.player2 = new Player(player2Name);
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
-            m_score1 += 1;
+        if (playerName.equals(player1.name))
+            player1.score.scorePoint();
         else
-            m_score2 += 1;
+            player2.score.scorePoint();
     }
 
     public String getScore() {
         String score = "";
-        int tempScore=0;
-        if (m_score1==m_score2)
-        {
-            switch (m_score1)
-            {
-                case 0:
-                        score = "Love-All";
-                    break;
-                case 1:
-                        score = "Fifteen-All";
-                    break;
-                case 2:
-                        score = "Thirty-All";
-                    break;
-                default:
-                        score = "Deuce";
-                    break;
-                
+        if (player1.score.equals(player2.score)) {
+            if (player1.score.score < 3) {
+                score = player1.score.name() + "-All";
+            } else {
+                score = "Deuce";
             }
-        }
-        else if (m_score1>=4 || m_score2>=4)
-        {
-            int minusResult = m_score1-m_score2;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
-        }
-        else
-        {
-            for (int i=1; i<3; i++)
-            {
-                if (i==1) tempScore = m_score1;
-                else { score+="-"; tempScore = m_score2;}
-                switch(tempScore)
-                {
-                    case 0:
-                        score+="Love";
-                        break;
-                    case 1:
-                        score+="Fifteen";
-                        break;
-                    case 2:
-                        score+="Thirty";
-                        break;
-                    case 3:
-                        score+="Forty";
-                        break;
-                }
+        } else {
+            Player winning = player1.winning(player2);
+            Player advantage = player1.advantage(player2);
+            if (winning != null) {
+                score = "Win for " + winning.name;
+            } else if (advantage != null) {
+                score = "Advantage " + advantage.name;
+            } else {
+                score = Stream.of(player1.score, player2.score).map(Score::name).collect(Collectors.joining("-"));
             }
         }
         return score;
