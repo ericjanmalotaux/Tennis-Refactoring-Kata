@@ -1,51 +1,33 @@
-class TennisGame1(private val player1Name: String, private val player2Name: String) : TennisGame {
+import java.lang.Math.abs
+
+class TennisGame1(player1Name: String, player2Name: String) : TennisGame {
+
+    companion object {
+        val SCORES = arrayOf("Love", "Fifteen", "Thirty", "Forty")
+    }
+    data class Player(val name: String) {
+        var score = 0
+    }
+    val player1 = Player(player1Name)
+    val player2 = Player(player2Name)
 
     private var m_score1: Int = 0
     private var m_score2: Int = 0
 
     override fun wonPoint(playerName: String) {
-        if (playerName === player1Name)
+        if (playerName == player1.name)
             m_score1 += 1
         else
             m_score2 += 1
     }
 
-    override fun getScore(): String {
-        var score = ""
-        var tempScore = 0
+    override fun getScore(): String =
         if (m_score1 == m_score2) {
-            when (m_score1) {
-                0 -> score = "Love-All"
-                1 -> score = "Fifteen-All"
-                2 -> score = "Thirty-All"
-                else -> score = "Deuce"
-            }
+            if (m_score1 < 3) "${SCORES[m_score1]}-All" else "Deuce"
         } else if (m_score1 >= 4 || m_score2 >= 4) {
             val minusResult = m_score1 - m_score2
-            if (minusResult == 1)
-                score = "Advantage " + player1Name
-            else if (minusResult == -1)
-                score = "Advantage " + player2Name
-            else if (minusResult >= 2)
-                score = "Win for " + player1Name
-            else
-                score = "Win for " + player2Name
+            "${if (abs(minusResult) == 1) "Advantage" else "Win for"} ${if (minusResult > 0) player1.name else player2.name}"
         } else {
-            for (i in 1..2) {
-                if (i == 1)
-                    tempScore = m_score1
-                else {
-                    score += "-"
-                    tempScore = m_score2
-                }
-                when (tempScore) {
-                    0 -> score += "Love"
-                    1 -> score += "Fifteen"
-                    2 -> score += "Thirty"
-                    3 -> score += "Forty"
-                }
-            }
+            "${SCORES[m_score1]}-${SCORES[m_score2]}"
         }
-        return score
-    }
 }
