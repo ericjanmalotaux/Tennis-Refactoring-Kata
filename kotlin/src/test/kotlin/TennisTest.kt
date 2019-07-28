@@ -6,7 +6,13 @@ import org.junit.runners.Parameterized.Parameters
 import java.util.*
 
 @RunWith(Parameterized::class)
-class TennisTest(private val player1Score: Int, private val player2Score: Int, private val expectedScore: String) {
+class TennisTest(
+    private val player1Name: String,
+    private val player2Name: String,
+    private val player1Score: Int,
+    private val player2Score: Int,
+    private val expectedScore: String
+) {
 
     companion object {
 
@@ -14,39 +20,41 @@ class TennisTest(private val player1Score: Int, private val player2Score: Int, p
             @JvmStatic
             @Parameters
             get() =
-                Arrays.asList(arrayOf(0, 0, "Love-All"),
-                        arrayOf(1, 1, "Fifteen-All"),
-                        arrayOf(2, 2, "Thirty-All"),
-                        arrayOf(3, 3, "Deuce"),
-                        arrayOf(4, 4, "Deuce"),
-                        arrayOf(1, 0, "Fifteen-Love"),
-                        arrayOf(0, 1, "Love-Fifteen"),
-                        arrayOf(2, 0, "Thirty-Love"),
-                        arrayOf(0, 2, "Love-Thirty"),
-                        arrayOf(3, 0, "Forty-Love"),
-                        arrayOf(0, 3, "Love-Forty"),
-                        arrayOf(4, 0, "Win for player1"),
-                        arrayOf(0, 4, "Win for player2"),
-                        arrayOf(2, 1, "Thirty-Fifteen"),
-                        arrayOf(1, 2, "Fifteen-Thirty"),
-                        arrayOf(3, 1, "Forty-Fifteen"),
-                        arrayOf(1, 3, "Fifteen-Forty"),
-                        arrayOf(4, 1, "Win for player1"),
-                        arrayOf(1, 4, "Win for player2"),
-                        arrayOf(3, 2, "Forty-Thirty"),
-                        arrayOf(2, 3, "Thirty-Forty"),
-                        arrayOf(4, 2, "Win for player1"),
-                        arrayOf(2, 4, "Win for player2"),
-                        arrayOf(4, 3, "Advantage player1"),
-                        arrayOf(3, 4, "Advantage player2"),
-                        arrayOf(5, 4, "Advantage player1"),
-                        arrayOf(4, 5, "Advantage player2"),
-                        arrayOf(15, 14, "Advantage player1"),
-                        arrayOf(14, 15, "Advantage player2"),
-                        arrayOf(6, 4, "Win for player1"),
-                        arrayOf(4, 6, "Win for player2"),
-                        arrayOf(16, 14, "Win for player1"),
-                        arrayOf(14, 16, "Win for player2"))
+                Arrays.asList(
+                    arrayOf("player1", "player2", 0, 0, "Love-All"),
+                    arrayOf("player1", "player2", 1, 1, "Fifteen-All"),
+                    arrayOf("player1", "player2", 2, 2, "Thirty-All"),
+                    arrayOf("player1", "player2", 3, 3, "Deuce"),
+                    arrayOf("player1", "player2", 4, 4, "Deuce"),
+                    arrayOf("player1", "player2", 1, 0, "Fifteen-Love"),
+                    arrayOf("player1", "player2", 0, 1, "Love-Fifteen"),
+                    arrayOf("player1", "player2", 2, 0, "Thirty-Love"),
+                    arrayOf("player1", "player2", 0, 2, "Love-Thirty"),
+                    arrayOf("player1", "player2", 3, 0, "Forty-Love"),
+                    arrayOf("player1", "player2", 0, 3, "Love-Forty"),
+                    arrayOf("player1", "player2", 4, 0, "Win for player1"),
+                    arrayOf("player1", "player2", 0, 4, "Win for player2"),
+                    arrayOf("player1", "player2", 2, 1, "Thirty-Fifteen"),
+                    arrayOf("player1", "player2", 1, 2, "Fifteen-Thirty"),
+                    arrayOf("player1", "player2", 3, 1, "Forty-Fifteen"),
+                    arrayOf("player1", "player2", 1, 3, "Fifteen-Forty"),
+                    arrayOf("player1", "player2", 4, 1, "Win for player1"),
+                    arrayOf("player1", "player2", 1, 4, "Win for player2"),
+                    arrayOf("player1", "player2", 3, 2, "Forty-Thirty"),
+                    arrayOf("player1", "player2", 2, 3, "Thirty-Forty"),
+                    arrayOf("player1", "player2", 4, 2, "Win for player1"),
+                    arrayOf("player1", "player2", 2, 4, "Win for player2"),
+                    arrayOf("player1", "player2", 4, 3, "Advantage player1"),
+                    arrayOf("player1", "player2", 3, 4, "Advantage player2"),
+                    arrayOf("player1", "player2", 5, 4, "Advantage player1"),
+                    arrayOf("player1", "player2", 4, 5, "Advantage player2"),
+                    arrayOf("player1", "player2", 15, 14, "Advantage player1"),
+                    arrayOf("player1", "player2", 14, 15, "Advantage player2"),
+                    arrayOf("player1", "player2", 6, 4, "Win for player1"),
+                    arrayOf("player1", "player2", 4, 6, "Win for player2"),
+                    arrayOf("player1", "player2", 16, 14, "Win for player1"),
+                    arrayOf("player1", "player2", 14, 16, "Win for player2")
+                )
     }
 
     fun checkAllScores(game: TennisGame) {
@@ -62,19 +70,19 @@ class TennisTest(private val player1Score: Int, private val player2Score: Int, p
 
     @Test
     fun checkAllScoresTennisGame1() {
-        val game = TennisGame1("player1", "player2")
+        val game = TennisGame1(player1Name, player2Name)
         checkAllScores(game)
     }
 
     @Test
     fun checkAllScoresTennisGame2() {
-        val game = TennisGame2("player1", "player2")
+        val game = TennisGame2(player1Name, player2Name)
         checkAllScores(game)
     }
 
     @Test
     fun checkAllScoresTennisGame3() {
-        val game = TennisGame3("player1", "player2")
+        val game = TennisGame3(player1Name, player2Name)
         checkAllScores(game)
     }
 }
