@@ -2,12 +2,17 @@ class TennisGame1(private val player1Name: String, private val player2Name: Stri
 
     private var m_score1: Int = 0
     private var m_score2: Int = 0
+    private var scores: Map<String, Int>  = mapOf(player1Name to 0, player2Name to 0)
+
+    companion object {
+        var points = arrayOf("Love", "Fifteen", "Thirty", "Forty", "Advantage")
+    }
 
     override fun wonPoint(playerName: String) {
-        if (playerName === "player1")
-            m_score1 += 1
-        else
-            m_score2 += 1
+        if (playerName === "player1") {
+            if (scores[playerName]!! < 4) scores[playerName]!! += 1
+        } else
+            if (m_score2 < 4) m_score2 += 1
     }
 
     override fun getScore(): String {
