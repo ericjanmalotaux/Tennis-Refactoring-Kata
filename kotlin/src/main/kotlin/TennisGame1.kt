@@ -1,33 +1,23 @@
-import java.lang.Math.abs
-
 class TennisGame1(player1Name: String, player2Name: String) : TennisGame {
-
     companion object {
         val SCORES = arrayOf("Love", "Fifteen", "Thirty", "Forty")
     }
-    data class Player(val name: String) {
-        var score = 0
-    }
-    val player1 = Player(player1Name)
-    val player2 = Player(player2Name)
 
-    private var m_score1: Int = 0
-    private var m_score2: Int = 0
+    data class Player(val name: String, var score: Int = 0)
+
+    private val players = arrayOf(Player(player1Name), Player(player2Name))
 
     override fun wonPoint(playerName: String) {
-        if (playerName == player1.name)
-            m_score1 += 1
-        else
-            m_score2 += 1
+        players.find { it.name == playerName }!!.score++
     }
 
     override fun getScore(): String =
-        if (m_score1 == m_score2) {
-            if (m_score1 < 3) "${SCORES[m_score1]}-All" else "Deuce"
-        } else if (m_score1 >= 4 || m_score2 >= 4) {
-            val minusResult = m_score1 - m_score2
-            "${if (abs(minusResult) == 1) "Advantage" else "Win for"} ${if (minusResult > 0) player1.name else player2.name}"
+        if (players[0].score == players[1].score) {
+            if (players[0].score < 3) "${SCORES[players[0].score]}-All" else "Deuce"
+        } else if (players[0].score >= 4 || players[1].score >= 4) {
+            val difference = players[0].score - players[1].score
+            "${if (Math.abs(difference) == 1) "Advantage" else "Win for"} ${if (difference > 0) players[0].name else players[1].name}"
         } else {
-            "${SCORES[m_score1]}-${SCORES[m_score2]}"
+            "${SCORES[players[0].score]}-${SCORES[players[1].score]}"
         }
 }
