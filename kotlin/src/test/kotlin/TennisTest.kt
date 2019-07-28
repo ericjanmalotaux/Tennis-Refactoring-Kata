@@ -21,11 +21,11 @@ class TennisTest(
             @Parameters
             get() =
                 Arrays.asList(
-                    arrayOf("player1", "player2", 0, 0, "Love-All"),
-                    arrayOf("player1", "player2", 1, 1, "Fifteen-All"),
-                    arrayOf("player1", "player2", 2, 2, "Thirty-All"),
-                    arrayOf("player1", "player2", 3, 3, "Deuce"),
-                    arrayOf("player1", "player2", 4, 4, "Deuce"),
+                    arrayOf("Eric", "Trudie", 0, 0, "Love-All"),
+                    arrayOf("Berend", "Choi Wan", 1, 1, "Fifteen-All"),
+                    arrayOf("Bastiaan", "Marijn", 2, 2, "Thirty-All"),
+                    arrayOf("Jiska", "Nick", 3, 3, "Deuce"),
+                    arrayOf("Milka", "Duarte", 4, 4, "Deuce"),
                     arrayOf("player1", "player2", 1, 0, "Fifteen-Love"),
                     arrayOf("player1", "player2", 0, 1, "Love-Fifteen"),
                     arrayOf("player1", "player2", 2, 0, "Thirty-Love"),
@@ -61,9 +61,9 @@ class TennisTest(
         val highestScore = Math.max(this.player1Score, this.player2Score)
         for (i in 0 until highestScore) {
             if (i < this.player1Score)
-                game.wonPoint("player1")
+                game.wonPoint(player1Name)
             if (i < this.player2Score)
-                game.wonPoint("player2")
+                game.wonPoint(player2Name)
         }
         assertEquals(this.expectedScore, game.getScore())
     }
