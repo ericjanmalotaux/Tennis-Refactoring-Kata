@@ -1,76 +1,41 @@
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+class Player {
+    final String name;
+    int score = 0;
+
+    Player(String name) {
+        this.name = name;
+    }
+
+    void wonPoint() {
+        score++;
+    }
+}
 
 public class TennisGame1 implements TennisGame {
-    
-    private int m_score1 = 0;
-    private int m_score2 = 0;
-    private String player1Name;
-    private String player2Name;
+    private static final String[] SCORES = {"Love", "Fifteen", "Thirty", "Forty"};
+    private final List<Player> players;
 
-    public TennisGame1(String player1Name, String player2Name) {
-        this.player1Name = player1Name;
-        this.player2Name = player2Name;
+    TennisGame1(String player1Name, String player2Name) {
+        players = Arrays.asList(new Player(player1Name), new Player(player2Name));
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
-            m_score1 += 1;
-        else
-            m_score2 += 1;
+        players.stream().filter(player -> playerName.equals(player.name)).forEach(Player::wonPoint);
     }
 
     public String getScore() {
-        String score = "";
-        int tempScore=0;
-        if (m_score1==m_score2)
-        {
-            switch (m_score1)
-            {
-                case 0:
-                        score = "Love-All";
-                    break;
-                case 1:
-                        score = "Fifteen-All";
-                    break;
-                case 2:
-                        score = "Thirty-All";
-                    break;
-                default:
-                        score = "Deuce";
-                    break;
-                
-            }
+        List<Integer> scores = players.stream().map(player -> player.score).distinct().collect(Collectors.toList());
+        if (scores.size() == 1) {
+            return players.get(0).score < 3 ? SCORES[players.get(0).score] + "-All" : "Deuce";
         }
-        else if (m_score1>=4 || m_score2>=4)
-        {
-            int minusResult = m_score1-m_score2;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
+        if (players.stream().anyMatch(player -> player.score >= 4)) {
+            return (Math.abs(players.stream().map(player -> player.score).reduce((a, b) -> a - b).get()) == 1
+                    ? "Advantage " : "Win for ") + players.stream().reduce((a1, b1) -> a1.score < b1.score ? b1 : a1).get().name;
         }
-        else
-        {
-            for (int i=1; i<3; i++)
-            {
-                if (i==1) tempScore = m_score1;
-                else { score+="-"; tempScore = m_score2;}
-                switch(tempScore)
-                {
-                    case 0:
-                        score+="Love";
-                        break;
-                    case 1:
-                        score+="Fifteen";
-                        break;
-                    case 2:
-                        score+="Thirty";
-                        break;
-                    case 3:
-                        score+="Forty";
-                        break;
-                }
-            }
-        }
-        return score;
+        return players.stream().map(player -> player.score).map(s -> SCORES[s]).collect(Collectors.joining("-"));
     }
 }
