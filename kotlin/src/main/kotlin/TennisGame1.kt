@@ -1,9 +1,8 @@
+data class Player(val name: String, var score: Int = 0)
 class TennisGame1(player1Name: String, player2Name: String) : TennisGame {
     companion object {
         val SCORES = arrayOf("Love", "Fifteen", "Thirty", "Forty")
     }
-
-    data class Player(val name: String, var score: Int = 0)
 
     private val players = arrayOf(Player(player1Name), Player(player2Name))
 
@@ -11,13 +10,15 @@ class TennisGame1(player1Name: String, player2Name: String) : TennisGame {
         players.find { it.name == playerName }!!.score++
     }
 
-    override fun getScore(): String =
-        if (players[0].score == players[1].score) {
-            if (players[0].score < 3) "${SCORES[players[0].score]}-All" else "Deuce"
-        } else if (players[0].score >= 4 || players[1].score >= 4) {
-            val difference = players[0].score - players[1].score
+    override fun getScore(): String {
+        val scores = players.map { it.score }.distinct()
+        return if (scores.size == 1) {
+            if (scores.single() < 3) "${SCORES[scores.single()]}-All" else "Deuce"
+        } else if (scores.any { it >= 4 }) {
+            val difference = scores[0] - scores[1]
             "${if (Math.abs(difference) == 1) "Advantage" else "Win for"} ${if (difference > 0) players[0].name else players[1].name}"
         } else {
-            "${SCORES[players[0].score]}-${SCORES[players[1].score]}"
+            "${SCORES[scores[0]]}-${SCORES[scores[1]]}"
         }
+    }
 }
